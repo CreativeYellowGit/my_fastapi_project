@@ -52,7 +52,11 @@ async def process_image(
     # 전처리된 이미지를 입력 파일의 확장자 형식으로 인코딩 및 저장
     _, img_encoded = cv2.imencode(f'.{extension}', image)
     img_base64 = base64.b64encode(img_encoded).decode('utf-8')
-    output_filename = os.path.join("changed_images", f"{prefix_name}{str(uuid.uuid4())}.{extension}")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(base_dir, "..", "changed_images")
+    os.makedirs(output_dir, exist_ok=True)  # 폴더가 없으면 생성
+
+    output_filename = os.path.join(output_dir, f"{prefix_name}{str(uuid.uuid4())}.{extension}")
 
     with open(output_filename, "wb") as f:
         f.write(img_encoded)
